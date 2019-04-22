@@ -69,7 +69,7 @@ Function B1
 FunctionEnd
 Function B2
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "0"
-	Quit
+	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
 FunctionEnd
 
 ;×¢²á±íÏî
