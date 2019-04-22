@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "0.0.0.1"
+!define FILE_VERSION "0.0.0.2"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -14,7 +14,7 @@ VIProductVersion "${FILE_VERSION}"	;版本号，格式为 X.X.X.X (若使用则本条必须)
 VIAddVersionKey /LANG=2052 ProductName "${PRODUCT_NAME}${PRODUCT_VERSION}"	;产品名称
 VIAddVersionKey /LANG=2052 ProductVersion "${PRODUCT_VERSION}"	;产品版本
 VIAddVersionKey /LANG=2052 Comments "${PRODUCT_NAME}${PRODUCT_VERSION}"	;备注
-VIAddVersionKey /LANG=2052 LegalCopyright "版权所有 (C) ${PRODUCT_PUBLISHER}"	;合法版权
+VIAddVersionKey /LANG=2052 LegalCopyright "Copyright (C) ${PRODUCT_PUBLISHER}"	;合法版权
 VIAddVersionKey /LANG=2052 FileDescription "${PRODUCT_NAME}"	;文件描述(标准信息)
 VIAddVersionKey /LANG=2052 FileVersion "${FILE_VERSION}"	;文件版本(标准信息)
 ;VIAddVersionKey /LANG=2052 CompanyName "${PRODUCT_PUBLISHER}"	;公司名
@@ -69,6 +69,7 @@ Function B1
 FunctionEnd
 Function B2
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "0"
+	Quit
 FunctionEnd
 
 ;注册表项
