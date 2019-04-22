@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "0.0.0.2"
+!define FILE_VERSION "0.0.0.3"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -33,6 +33,7 @@ Var Dialog
 Var Label1
 Var Button1
 Var Button2
+Var Button3
 
 ;创建自定义界面
 Page custom nsDialogs "" "WinLogon"
@@ -45,14 +46,13 @@ SectionEnd
 ;函数区段
 Function nsDialogs
 	nsDialogs::Create /NOUNLOAD 1018
-  Pop $Dialog
-	${If} $Dialog == error
-		Abort
-	${EndIf}
-	  
+	Pop $Dialog
+		${If} $Dialog == error
+			Abort
+		${EndIf}
 	Pop $Label1
 	${NSD_CreateLabel} 0 0 100% 12u "选择内容"
-
+	
 	${NSD_CreateButton} 20% 15% 60% 30% "启动自动登录"
 	Pop $Button1
 	${NSD_OnClick} $Button1 B1
@@ -71,7 +71,12 @@ Function B2
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "0"
 	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
 FunctionEnd
-
+Function B3
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "$0"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "$1"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "$2"
+	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
+FunctionEnd
 ;注册表项
 ;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "1"
 ;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "USERNAME"
