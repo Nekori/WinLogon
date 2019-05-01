@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "0.0.0.5"
+!define FILE_VERSION "0.0.0.6"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -48,6 +48,11 @@ SectionEnd
 
 ;函数区段
 Function nsDialogs
+  ${If} ${RunningX64}
+SetRegView 64
+  ${Else}
+SetRegView 32
+  ${EndIf}
 	nsDialogs::Create /NOUNLOAD 1018
 	Pop $Dialog
 		${If} $Dialog == error
@@ -92,7 +97,7 @@ Function nsDialogs2
 	nsDialogs::Show
 FunctionEnd
 Function B2
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "0"
+	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon"
 	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName"
 	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName"
 	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword"
