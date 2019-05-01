@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "0.0.0.4"
+!define FILE_VERSION "0.0.0.5"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -23,7 +23,7 @@ VIAddVersionKey /LANG=2052 FileVersion "${FILE_VERSION}"	;文件版本(标准信息)
 Name "${PRODUCT_NAME} ${FILE_VERSION}"
 OutFile "${FILE_NAME} v${FILE_VERSION}.exe"
 InstallDir "$PLUGINSDIR"
-Icon "D:\Users\图标\洛克人ico\X.ico"
+Icon "G:\ICON\洛克人ico\X.ico"
 RequestExecutionLevel admin
 SetCompressor lzma
 BrandingText "Nekori"
@@ -81,7 +81,7 @@ Function nsDialogs2
 	Pop $Label2
 	${NSD_CreateLabel} 0 0 100% 12u "请输入当前用户密码"
 	
-	${NSD_CreateText} 10% 20% 80% 20% "Type something here..."
+	${NSD_CreateText} 10% 20% 80% 20% ""
 	Pop $Text
 	${NSD_OnChange} $Text nsDialogsPageTextChange
 
@@ -93,7 +93,14 @@ Function nsDialogs2
 FunctionEnd
 Function B2
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "0"
+	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName"
+	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName"
+	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword"
 	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
+FunctionEnd
+Function nsDialogsPageTextChange
+	Pop $1 # $1 == $ Text
+	${NSD_GetText} $Text $0
 FunctionEnd
 Function B3
 	ReadEnvStr $R1 USERNAME
@@ -101,11 +108,7 @@ Function B3
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "$R1"
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "$R2"
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "$0"
-	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
-FunctionEnd
-Function nsDialogsPageTextChange
-	Pop $1 # $1 == $ Text
-	${NSD_GetText} $Text $0
+        SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
 FunctionEnd
 
 ;注册表项
