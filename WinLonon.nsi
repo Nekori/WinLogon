@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "0.0.0.7"
+!define FILE_VERSION "1.0.0.0"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
