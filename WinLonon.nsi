@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "1.0.0.2"
+!define FILE_VERSION "1.0.0.3"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -26,12 +26,11 @@ InstallDir "$PLUGINSDIR"
 Icon "G:\ICON\洛克人ico\X.ico"
 RequestExecutionLevel admin
 SetCompressor lzma
-BrandingText "Nekori"
+BrandingText /TRIMright "Nekori：https://github.com/Nekori/WinLogon"
 
 ;分配变量
 Var Dialog
 Var Label1
-Var Label2
 Var Button1
 Var Button2
 Var Button3
@@ -40,66 +39,54 @@ Var Text
 
 ;创建自定义界面
 Page custom nsDialogs "" "WinLogon"
-Page custom nsDialogs2 "" "WinLogon"
 
 Section -Post
-  SetOutPath "$PLUGINSDIR"
-  File "README.md"
+	SetOutPath "$PLUGINSDIR"
+	File "README.md"
 SectionEnd
 
 ;函数区段
 Function nsDialogs
-  ${If} ${RunningX64}
-SetRegView 64
-  ${Else}
-SetRegView 32
-  ${EndIf}
+	${If} ${RunningX64}
+	      SetRegView 64
+	${Else}
+	       SetRegView 32
+	${EndIf}
+	
 	nsDialogs::Create /NOUNLOAD 1018
 	Pop $Dialog
 		${If} $Dialog == error
 			Abort
 		${EndIf}
 	Pop $Label1
-	${NSD_CreateLabel} 0 0 100% 12u "选择内容"
+	${NSD_CreateLabel} 5% 5% 100% 10% "请输入当前用户密码"
 	
-	${NSD_CreateButton} 20% 10% 60% 20% "启动自动登录"
+	${NSD_CreateText} 10% 20% 80% 20% ""
+	Pop $Text
+	${NSD_OnChange} $Text nsDialogsPageTextChange
+	
+	${NSD_CreateButton} 10% 45% 35% 20% "开启自动登录"
 	Pop $Button1
 	${NSD_OnClick} $Button1 B1
 
-	${NSD_CreateButton} 20% 40% 60% 20% "关闭自动登录"
+	${NSD_CreateButton} 55% 45% 35% 20% "关闭自动登录"
 	Pop $Button2
 	${NSD_OnClick} $Button2 B2
 
-	${NSD_CreateButton} 20% 70% 60% 20% "更新地址"
+	${NSD_CreateButton} 10% 70% 80% 20% "更新地址"
 	Pop $Buttonhttp
 	${NSD_OnClick} $Buttonhttp Bhttp
 
 	nsDialogs::Show
 FunctionEnd
-
 Function B1
+	ReadEnvStr $R1 USERNAME
+	ReadEnvStr $R2 COMPUTERNAME
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "1"
-	SendMessage $HWNDPARENT 0x408 1 0 #跳到下一页面
-FunctionEnd
-
-Function nsDialogs2
-	nsDialogs::Create /NOUNLOAD 1018
-	Pop $Dialog
-		${If} $Dialog == error
-			Abort
-		${EndIf}
-	Pop $Label2
-	${NSD_CreateLabel} 0 0 100% 12u "请输入当前用户密码"
-	
-	${NSD_CreateText} 10% 20% 80% 20% ""
-	Pop $Text
-	${NSD_OnChange} $Text nsDialogsPageTextChange
-
-	${NSD_CreateButton} 10% 50% 80% 20% "完成输入"
-	Pop $Button3
-	${NSD_OnClick} $Button3 B3
-	
-	nsDialogs::Show
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "$R1"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "$R2"
+	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "$0"
+	SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
 FunctionEnd
 Function B2
 	DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon"
@@ -112,20 +99,6 @@ Function nsDialogsPageTextChange
 	Pop $1 # $1 == $ Text
 	${NSD_GetText} $Text $0
 FunctionEnd
-Function B3
-	ReadEnvStr $R1 USERNAME
-	ReadEnvStr $R2 COMPUTERNAME
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "$R1"
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "$R2"
-	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "$0"
-        SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
-FunctionEnd
 Function Bhttp
-        ExecShell open "https://github.com/Nekori/WinLogon/releases"
+	 ExecShell open "https://github.com/Nekori/WinLogon/releases"
 FunctionEnd
-
-;注册表项
-;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "AutoAdminLogon" "1"
-;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultUserName" "USERNAME"
-;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "COMPUTERNAME"
-;	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "password"

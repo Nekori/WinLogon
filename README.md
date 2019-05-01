@@ -2,9 +2,11 @@
 Windows自动登陆（Windows Automatic Logon）[下载地址](https://github.com/Nekori/WinLogon/releases)。  <br/>
 
 #更新日志	（What's New）：<br/>
+v1.0.0.3	（2019-05-01）<br/>
+	合并页面，改为单页面文件。<br/>
 v1.0.0.2	（2019-05-01）<br/>
 	更新README.md；<br/>
-	增加更新地址。<br/>
+	调整界面。<br/>
 v1.0.0.1	（2019-05-01）<br/>
 	调整界面；<br/>
 	增加更新地址。<br/>
