@@ -1,4 +1,5 @@
 # WinLogon
+Windows自动登陆（Windows Automatic Logon）[下载地址](https://github.com/Nekori/WinLogon/releases/download/1.0.0.0/WinLogon.v1.0.0.0.exe)
 
 #更新日志	（What's New）：
 v1.0.0.0	（2019-05-01）
