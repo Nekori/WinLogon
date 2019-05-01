@@ -1,6 +1,6 @@
 ; 安装程序初始定义常量
 !define FILE_NAME "WinLogon"
-!define FILE_VERSION "1.0.0.0"
+!define FILE_VERSION "1.0.0.1"
 !define PRODUCT_NAME "Windows Automatic Logon"
 !define /date PRODUCT_VERSION "1.0.%y.%m%d"
 !define PRODUCT_PUBLISHER "Nekori"
@@ -35,6 +35,7 @@ Var Label2
 Var Button1
 Var Button2
 Var Button3
+Var Buttonhttp
 Var Text
 
 ;创建自定义界面
@@ -61,13 +62,17 @@ SetRegView 32
 	Pop $Label1
 	${NSD_CreateLabel} 0 0 100% 12u "选择内容"
 	
-	${NSD_CreateButton} 20% 15% 60% 30% "启动自动登录"
+	${NSD_CreateButton} 20% 10% 60% 20% "启动自动登录"
 	Pop $Button1
 	${NSD_OnClick} $Button1 B1
 
-	${NSD_CreateButton} 20% 60% 60% 30% "关闭自动登录"
+	${NSD_CreateButton} 20% 40% 60% 20% "关闭自动登录"
 	Pop $Button2
 	${NSD_OnClick} $Button2 B2
+
+	${NSD_CreateButton} 20% 70% 60% 20% "更新地址"
+	Pop $Buttonhttp
+	${NSD_OnClick} $Buttonhttp Bhttp
 
 	nsDialogs::Show
 FunctionEnd
@@ -114,6 +119,9 @@ Function B3
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "DefaultDomainName" "$R2"
 	WriteRegStr HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" "Defaultpassword" "$0"
         SendMessage $HWNDPARENT ${WM_CLOSE} 0 0
+FunctionEnd
+Function Bhttp
+        ExecShell open "https://github.com/Nekori/WinLogon/releases"
 FunctionEnd
 
 ;注册表项
